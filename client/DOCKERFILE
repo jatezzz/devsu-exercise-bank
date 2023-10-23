@@ -1,0 +1,17 @@
+# Stage 1: Build the application
+FROM gradle:8.3.0-jdk17-jammy AS build
+COPY --chown=gradle:gradle . /home/gradle/src
+WORKDIR /home/gradle/src
+RUN ./gradlew build --no-daemon
+
+
+## Stage 2: Run the application
+FROM eclipse-temurin:17-jdk-jammy
+ENV ARTIFACT_NAME=client-0.0.1-SNAPSHOT.jar
+ENV APP_HOME=/home/gradle/src
+
+WORKDIR $APP_HOME/
+COPY --from=build $APP_HOME/build/libs/$ARTIFACT_NAME .
+
+EXPOSE 8081
+ENTRYPOINT exec java -jar ${ARTIFACT_NAME}

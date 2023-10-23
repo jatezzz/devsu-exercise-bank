@@ -1,0 +1,27 @@
+version: '3.7'
+services:
+  microservice-client:
+    build:
+      context: ./client
+      dockerfile: DOCKERFILE
+    image: microservice-client:latest
+    ports:
+      - "8081:8081"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://microservice-client:8081/clientes" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  microservice-account:
+    build:
+      context: ./account
+      dockerfile: DOCKERFILE
+    image: microservice-account:latest
+    environment:
+      - MICROSERVICE_CLIENT_URL=http://microservice-client:8081
+    depends_on:
+      microservice-client:
+        condition: service_healthy
+    ports:
+      - "8082:8082"

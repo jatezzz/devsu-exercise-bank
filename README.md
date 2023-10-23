@@ -21,6 +21,10 @@ docker-compose up --build
 
 This command will build the Docker images and start the containers as defined in your docker-compose.yml file.
 
+### Git repo
+
+git@github.com:jatezzz/devsu-exercise-bank.git
+
 ### Author
 
 John Trujillo
